@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مكالمة دكتور - استشارات طبية</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- الهيدر -->
+    <header>
+        <div class="container">
+            <div class="logo">
+                <h1>مكالمة دكتور</h1>
+                <p>استشارة طبية عبر مكالمة مع دكتور متخصص</p>
+            </div>
+            <div class="header-controls">
+                <div class="language-switcher">
+                    <button id="lang-ar" class="lang-btn active">العربية</button>
+                    <button id="lang-en" class="lang-btn">English</button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- قسم البحث -->
+    <section class="hero">
+        <div class="container">
+            <div class="search-section">
+                <div class="search-box">
+                    <input type="text" id="doctor-search" placeholder="اكتب اسم الدكتور أو التخصص">
+                    <button id="search-btn">بحث</button>
+                </div>
+
+                <div class="filters">
+                    <select id="specialty">
+                        <option value="">اختر التخصص</option>
+                        <option value="general-medicine">طب عام</option>
+                        <option value="cardiology">أمراض القلب</option>
+                        <option value="pediatrics">طب الأطفال</option>
+                        <option value="dermatology">الأمراض الجلدية</option>
+                        <option value="orthopedics">جراحة العظام</option>
+                        <option value="gynecology">نساء وتوليد</option>
+                    </select>
+
+                    <select id="governorate">
+                        <option value="">اختر المحافظة</option>
+                        <option value="cairo">القاهرة</option>
+                        <option value="giza">الجيزة</option>
+                        <option value="alexandria">الإسكندرية</option>
+                        <option value="sharqia">الشرقية</option>
+                    </select>
+
+                    <select id="insurance">
+                        <option value="">اختر التأمين</option>
+                        <option value="health">التأمين الصحي</option>
+                        <option value="private">تأمين خاص</option>
+                        <option value="cash">نقدي</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- قسم الأطباء -->
+    <section class="doctors-section">
+        <div class="container">
+            <h3>الأطباء المتاحون</h3>
+            <div class="doctors-grid" id="doctors-grid">
+                <!-- سيتم تعبئة الأطباء هنا عبر JavaScript -->
+            </div>
+        </div>
+    </section>
+
+    <!-- الفوتر -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>عن مكالمة دكتور</h4>
+                    <p>نقدم لكم أفضل الخدمات الصحية عبر الإنترنت لتسهيل الوصول إلى الرعاية الطبية.</p>
+                </div>
+                <div class="footer-section">
+                    <h4>اتصل بنا</h4>
+                    <p>هاتف: 16545</p>
+                    <p>البريد الإلكتروني: info@doctorcall.com</p>
+                    <p>العنوان: القاهرة، مصر</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2024 مكالمة دكتور. جميع الحقوق محفوظة.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>

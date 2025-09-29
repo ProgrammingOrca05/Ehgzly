@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>بروفيل الطبيب | Doctor Profile</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f8f9fa;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        
+        .back-btn {
+            background: #6c757d;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-bottom: 20px;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .back-btn:hover {
+            background: #5a6268;
+        }
+        
+        .profile-header {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+        
+        .profile-image {
+            flex: 0 0 250px;
+            height: 300px;
+            background: #f0f0f0;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            color: #666;
+        }
+        
+        .profile-info {
+            flex: 1;
+            min-width: 300px;
+        }
+        
+        .profile-name {
+            font-size: 28px;
+            color: #2a7de1;
+            margin-bottom: 10px;
+        }
+        
+        .profile-specialty {
+            font-size: 18px;
+            color: #34c759;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+        
+        .profile-rating {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            color: #ffc107;
+            font-size: 18px;
+        }
+        
+        .profile-description {
+            margin-bottom: 20px;
+            line-height: 1.6;
+            color: #666;
+        }
+        
+        .profile-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .detail-card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .detail-card h3 {
+            color: #2a7de1;
+            margin-bottom: 15px;
+            font-size: 18px;
+            border-bottom: 2px solid #f0f0f0;
+            padding-bottom: 10px;
+        }
+        
+        .detail-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        .detail-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+        
+        .detail-label {
+            font-weight: bold;
+            color: #666;
+        }
+        
+        .detail-value {
+            color: #333;
+            text-align: left;
+        }
+        
+        .availability-list {
+            list-style: none;
+        }
+        
+        .availability-list li {
+            padding: 8px 0;
+            border-bottom: 1px solid #f0f0f0;
+            display: flex;
+            align-items: center;
+        }
+        
+        .availability-list li:before {
+            content: "✓";
+            color: #34c759;
+            margin-left: 10px;
+            font-weight: bold;
+        }
+        
+        .availability-list li:last-child {
+            border-bottom: none;
+        }
+        
+        .profile-actions {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .action-btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .primary-btn {
+            background: #2a7de1;
+            color: white;
+        }
+        
+        .secondary-btn {
+            background: #34c759;
+            color: white;
+        }
+        
+        .action-btn:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+        }
+        
+        .language-switcher {
+            display: flex;
+            background: rgba(42, 125, 225, 0.1);
+            border-radius: 20px;
+            padding: 3px;
+            margin-bottom: 20px;
+            width: fit-content;
+        }
+        
+        .lang-btn {
+            background: transparent;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .lang-btn.active {
+            background: #2a7de1;
+            color: white;
+        }
+        
+        @media (max-width: 768px) {
+            .profile-header {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .profile-image {
+                flex: none;
+                max-width: 250px;
+                margin: 0 auto;
+            }
+            
+            .profile-actions {
+                justify-content: center;
+            }
+            
+            .action-btn {
+                flex: 1;
+                min-width: 200px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="language-switcher">
+            <button class="lang-btn active" onclick="applyLanguage('ar')">العربية</button>
+            <button class="lang-btn" onclick="applyLanguage('en')">English</button>
+        </div>
+        
+        <button class="back-btn" onclick="goBack()">← العودة إلى قائمة الأطباء</button>
+        
+        <div id="profile-content">
+            <!-- سيتم تعبئة محتوى البروفيل هنا -->
+        </div>
+    </div>
+
+    <script>
+        // بيانات الأطباء الكاملة
+        const doctors = [
+            {
+                id: 1,
+                name: 'د. أحمد محمود',
+                nameEn: 'Dr. Ahmed Mahmoud',
+                specialty: 'طب عام',
+                specialtyEn: 'General Medicine',
+                location: 'القاهرة - مصر الجديدة',
+                locationEn: 'Cairo - New Cairo',
+                rating: 4.2,
+                image: '👨‍⚕️',
+                description: 'طبيب عام بخبرة تزيد عن 10 سنوات في تشخيص وعلاج الأمراض الشائعة. متخصص في الفحوصات الدورية وعلاج الأمراض الباطنية.',
+                descriptionEn: 'General practitioner with over 10 years of experience in diagnosing and treating common diseases. Specialized in periodic examinations and internal medicine treatment.',
+                experience: 10,
+                education: 'كلية الطب - جامعة القاهرة\nماجستير في الطب الباطني',
+                educationEn: 'Faculty of Medicine - Cairo University\nMaster\'s in Internal Medicine',
+                languages: ['العربية', 'الإنجليزية'],
+                consultationFee: 200,
+                phone: '+201000000001',
+                email: 'dr.ahmed@se7tak.com',
+                availability: ['السبت', 'الأحد', 'الاثنين', 'الثلاثاء', 'الأربعاء'],
+                availabilityEn: ['Saturday', 'Sunday', 'Monday', 'Tuesday', 'Wednesday'],
+                workingHours: '9:00 ص - 5:00 م'
+            },
+            {
+                id: 2,
+                name: 'د. منى السيد',
+                nameEn: 'Dr. Mona El Sayed',
+                specialty: 'أمراض القلب',
+                specialtyEn: 'Cardiology',
+                location: 'الجيزة - الدقي',
+                locationEn: 'Giza - Dokki',
+                rating: 4.8,
+                image: '👩‍⚕️',
+                description: 'استشارية أمراض القلب بمستشفى القصر العيني، متخصصة في قسطرة القلب والفحوصات الدقيقة. حاصلة على زمالة الكلية الملكية للأطباء.',
+                descriptionEn: 'Cardiology consultant at Kasr Al Ainy Hospital, specializing in cardiac catheterization and precise examinations. Holder of the Royal College of Physicians fellowship.',
+                experience: 15,
+                education: 'كلية الطب - جامعة عين شمس\nدكتوراه في أمراض القلب',
+                educationEn: 'Faculty of Medicine - Ain Shams University\nPhD in Cardiology',
+                languages: ['العربية', 'الإنجليزية', 'الفرنسية'],
+                consultationFee: 350,
+                phone: '+201000000002',
+                email: 'dr.mona@se7tak.com',
+                availability: ['السبت', 'الاثنين', 'الأربعاء'],
+                availabilityEn: ['Saturday', 'Monday', 'Wednesday'],
+                workingHours: '10:00 ص - 4:00 م'
+            },
+            {
+                id: 3,
+                name: 'د. خالد عبد الرحمن',
+                nameEn: 'Dr. Khaled Abdel Rahman',
+                specialty: 'طب الأطفال',
+                specialtyEn: 'Pediatrics',
+                location: 'الإسكندرية - سموحة',
+                locationEn: 'Alexandria - Smouha',
+                rating: 4.5,
+                image: '👨‍⚕️',
+                description: 'طبيب أطفال متخصص في أمراض حديثي الولادة والتحصينات. يعمل بمستشفى الأطفال الجامعي وله أبحاث في طب الأطفال التطوري.',
+                descriptionEn: 'Pediatrician specializing in neonatal diseases and immunizations. Works at the University Children\'s Hospital and has research in developmental pediatrics.',
+                experience: 8,
+                education: 'كلية الطب - جامعة الإسكندرية\nماجستير في طب الأطفال',
+                educationEn: 'Faculty of Medicine - Alexandria University\nMaster\'s in Pediatrics',
+                languages: ['العربية', 'الإنجليزية'],
+                consultationFee: 250,
+                phone: '+201000000003',
+                email: 'dr.khaled@se7tak.com',
+                availability: ['الأحد', 'الثلاثاء', 'الخميس'],
+                availabilityEn: ['Sunday', 'Tuesday', 'Thursday'],
+                workingHours: '11:00 ص - 7:00 م'
+            },
+            {
+                id: 4,
+                name: 'د. سارة محمد',
+                nameEn: 'Dr. Sara Mohamed',
+                specialty: 'الأمراض الجلدية',
+                specialtyEn: 'Dermatology',
+                location: 'القاهرة - مدينة نصر',
+                locationEn: 'Cairo - Nasr City',
+                rating: 4.7,
+                image: '👩‍⚕️',
+                description: 'استشارية الأمراض الجلدية والتجميل، متخصصة في علاج حب الشباب والأمراض الجلدية المزمنة. حاصلة على شهادة البورد الأمريكي في الأمراض الجلدية.',
+                descriptionEn: 'Dermatology and cosmetic consultant, specializing in acne treatment and chronic skin diseases. Holder of the American Board of Dermatology certification.',
+                experience: 12,
+                education: 'كلية الطب - جامعة القاهرة\nزمالة الأمراض الجلدية',
+                educationEn: 'Faculty of Medicine - Cairo University\nDermatology Fellowship',
+                languages: ['العربية', 'الإنجليزية', 'الألمانية'],
+                consultationFee: 300,
+                phone: '+201000000004',
+                email: 'dr.sara@se7tak.com',
+                availability: ['السبت', 'الأحد', 'الاثنين', 'الأربعاء'],
+                availabilityEn: ['Saturday', 'Sunday', 'Monday', 'Wednesday'],
+                workingHours: '9:00 ص - 3:00 م'
+            },
+            {
+                id: 5,
+                name: 'د. عمرو حسن',
+                nameEn: 'Dr. Amr Hassan',
+                specialty: 'جراحة العظام',
+                specialtyEn: 'Orthopedics',
+                location: 'الجيزة - المهندسين',
+                locationEn: 'Giza - Mohandessin',
+                rating: 4.6,
+                image: '👨‍⚕️',
+                description: 'استشاري جراحة العظام والمفاصل، متخصص في جراحات العمود الفقري والمناظير. أجرى أكثر من 1000 عملية ناجحة في مجال جراحة العظام.',
+                descriptionEn: 'Orthopedic and joint surgery consultant, specializing in spinal surgeries and endoscopies. Performed over 1000 successful operations in orthopedics.',
+                experience: 14,
+                education: 'كلية الطب - جامعة عين شمس\nدكتوراه في جراحة العظام',
+                educationEn: 'Faculty of Medicine - Ain Shams University\nPhD in Orthopedic Surgery',
+                languages: ['العربية', 'الإنجليزية'],
+                consultationFee: 400,
+                phone: '+201000000005',
+                email: 'dr.amr@se7tak.com',
+                availability: ['الأحد', 'الثلاثاء', 'الخميس'],
+                availabilityEn: ['Sunday', 'Tuesday', 'Thursday'],
+                workingHours: '8:00 ص - 2:00 م'
+            },
+            {
+                id: 6,
+                name: 'د. ياسمين فؤاد',
+                nameEn: 'Dr. Yasmine Fouad',
+                specialty: 'نساء وتوليد',
+                specialtyEn: 'Gynecology',
+                location: 'القاهرة - الزمالك',
+                locationEn: 'Cairo - Zamalek',
+                rating: 4.9,
+                image: '👩‍⚕️',
+                description: 'استشارية النساء والتوليد، متخصصة في متابعة الحمل والولادة الطبيعية والقيصرية. حاصلة على زمالة الكلية الملكية لأمراض النساء والتوليد.',
+                descriptionEn: 'Gynecology and obstetrics consultant, specializing in pregnancy follow-up and natural and cesarean deliveries. Holder of the Royal College of Obstetricians and Gynaecologists fellowship.',
+                experience: 11,
+                education: 'كلية الطب - جامعة القاهرة\nماجستير في أمراض النساء والتوليد',
+                educationEn: 'Faculty of Medicine - Cairo University\nMaster\'s in Gynecology and Obstetrics',
+                languages: ['العربية', 'الإنجليزية', 'الإسبانية'],
+                consultationFee: 320,
+                phone: '+201000000006',
+                email: 'dr.yasmine@se7tak.com',
+                availability: ['السبت', 'الاثنين', 'الأربعاء', 'الجمعة'],
+                availabilityEn: ['Saturday', 'Monday', 'Wednesday', 'Friday'],
+                workingHours: '10:00 ص - 6:00 م'
+            }
+        ];
+
+        // بيانات الترجمة
+        const translations = {
+            'ar': {
+                'experience': 'سنوات الخبرة',
+                'education': 'التعليم',
+                'languages': 'اللغات المتحدث بها',
+                'consultation-fee': 'رسوم الاستشارة',
+                'contact-info': 'معلومات الاتصال',
+                'availability': 'أيام التواجد',
+                'book-consultation': 'حجز استشارة',
+                'back-to-doctors': 'العودة إلى قائمة الأطباء',
+                'phone': 'هاتف',
+                'email': 'بريد إلكتروني',
+                'location': 'الموقع',
+                'years': 'سنوات',
+                'working-hours': 'ساعات العمل',
+                'call-doctor': 'اتصل بالطبيب',
+                'egp': 'جنيه'
+            },
+            'en': {
+                'experience': 'Years of Experience',
+                'education': 'Education',
+                'languages': 'Spoken Languages',
+                'consultation-fee': 'Consultation Fee',
+                'contact-info': 'Contact Information',
+                'availability': 'Availability Days',
+                'book-consultation': 'Book Consultation',
+                'back-to-doctors': 'Back to Doctors List',
+                'phone': 'Phone',
+                'email': 'Email',
+                'location': 'Location',
+                'years': 'years',
+                'working-hours': 'Working Hours',
+                'call-doctor': 'Call Doctor',
+                'egp': 'EGP'
+            }
+        };
+
+        // تحديد اللغة الحالية
+        let currentLang = localStorage.getItem('currentLang') || 'ar';
+        
+        // تطبيق اللغة
+        function applyLanguage(lang) {
+            currentLang = lang;
+            localStorage.setItem('currentLang', lang);
+            document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
+            document.documentElement.lang = lang;
+            
+            // تحديث أزرار اللغة
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            displayDoctorProfile();
+        }
+
+        // العودة للخلف
+        function goBack() {
+            window.history.back();
+        }
+
+        // عرض بروفيل الطبيب (يحاول أولاً جلب البيانات من الـ API، ثم يرجع للبيانات المحلية إذا فشل)
+        async function displayDoctorProfile() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const idParam = urlParams.get('id') || localStorage.getItem('selectedDoctorId');
+            const t = translations[currentLang];
+
+            let doctor = null;
+
+            // حاول جلب تفاصيل الطبيب من الـ API
+            if (idParam) {
+                try {
+                    const res = await fetch(`http://localhost:1080/api/doctors/${idParam}`);
+                    if (res.ok) {
+                        const json = await res.json();
+                        if (json && json.status === 'success' && json.data) {
+                            const d = json.data;
+                            doctor = {
+                                id: d._id || d.id,
+                                name: d.name || d.nameAr || d.nameEn || 'دكتور',
+                                nameEn: d.nameEn || d.name || 'Doctor',
+                                specialty: d.specialization || d.specialty || '',
+                                specialtyEn: d.specialtyEn || d.specialization || '',
+                                location: d.location || '',
+                                locationEn: d.locationEn || '',
+                                rating: d.rating || 4.5,
+                                image: d.image || '👨‍⚕️',
+                                description: d.about || d.description || '',
+                                descriptionEn: d.descriptionEn || d.about || '',
+                                experience: d.experience || 5,
+                                education: d.education || '',
+                                educationEn: d.educationEn || '',
+                                languages: d.languages || ['العربية'],
+                                consultationFee: d.examinationPrice || d.consultationFee || d.fee || 200,
+                                phone: d.phone || d.contact || '',
+                                email: d.email || '',
+                                availability: d.availability || [],
+                                availabilityEn: d.availabilityEn || [],
+                                workingHours: d.workHrs || d.workingHours || ''
+                            };
+                        }
+                    }
+                } catch (err) {
+                    console.warn('Could not fetch doctor from API, using local data. Error:', err.message);
+                }
+            }
+
+            // إذا لم نجد الطبيب عن طريق الـ API، استخدم البيانات المحلية
+            if (!doctor && idParam) {
+                doctor = doctors.find(d => d.id == idParam);
+            }
+
+            if (!doctor) {
+                document.getElementById('profile-content').innerHTML = `
+                    <div style="text-align: center; padding: 50px;">
+                        <h2>${currentLang === 'ar' ? 'الطبيب غير موجود' : 'Doctor not found'}</h2>
+                        <p>${currentLang === 'ar' ? 'عذراً، لم يتم العثور على بيانات الطبيب.' : 'Sorry, doctor data was not found.'}</p>
+                    </div>
+                `;
+                return;
+            }
+
+            const name = currentLang === 'ar' ? doctor.name : doctor.nameEn || doctor.name;
+            const specialty = currentLang === 'ar' ? (doctor.specialty || '') : (doctor.specialtyEn || doctor.specialty || '');
+            const description = currentLang === 'ar' ? (doctor.description || '') : (doctor.descriptionEn || doctor.description || '');
+            const education = currentLang === 'ar' ? (doctor.education || '') : (doctor.educationEn || doctor.education || '');
+            const location = currentLang === 'ar' ? (doctor.location || '') : (doctor.locationEn || doctor.location || '');
+            const availability = currentLang === 'ar' ? (doctor.availability || []) : (doctor.availabilityEn || doctor.availability || []);
+
+            document.getElementById('profile-content').innerHTML = `
+                <div class="profile-header">
+                    <div class="profile-image">
+                        <span style="font-size: 80px;">${doctor.image}</span>
+                    </div>
+                    <div class="profile-info">
+                        <h1 class="profile-name">${name}</h1>
+                        <p class="profile-specialty">${specialty}</p>
+                        <div class="profile-rating">
+                            ${'★'.repeat(Math.floor(doctor.rating))}${'☆'.repeat(5 - Math.floor(doctor.rating))} 
+                            <span style="margin-right: 10px; color: #666;">(${doctor.rating})</span>
+                        </div>
+                        <p class="profile-description">${description}</p>
+                        <div class="profile-actions">
+                            <button class="action-btn primary-btn" onclick="bookConsultation('${doctor.id}')">
+                                ${t['book-consultation']}
+                            </button>
+                            <button class="action-btn secondary-btn" onclick="contactDoctor('${doctor.phone}')">
+                                ${t['call-doctor']}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="profile-details">
+                    <div class="detail-card">
+                        <h3>${t['experience']}</h3>
+                        <div class="detail-item">
+                            <span class="detail-label">${t['experience']}</span>
+                            <span class="detail-value">${doctor.experience} ${t['years']}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">${t['education']}</span>
+                            <span class="detail-value">${(education || '').replace(/\n/g, '<br>')}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">${t['languages']}</span>
+                            <span class="detail-value">${(doctor.languages || []).join(', ')}</span>
+                        </div>
+                    </div>
+                    
+                    <div class="detail-card">
+                        <h3>${t['consultation-fee']}</h3>
+                        <div class="detail-item">
+                            <span class="detail-label">${t['consultation-fee']}</span>
+                            <span class="detail-value">${doctor.consultationFee} ${t['egp']}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">${t['working-hours']}</span>
+                            <span class="detail-value">${doctor.workingHours || doctor.workHrs || ''}</span>
+                        </div>
+                    </div>
+                    
+                    <div class="detail-card">
+                        <h3>${t['contact-info']}</h3>
+                        <div class="detail-item">
+                            <span class="detail-label">${t['phone']}</span>
+                            <span class="detail-value">${doctor.phone}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">${t['email']}</span>
+                            <span class="detail-value">${doctor.email}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">${t['location']}</span>
+                            <span class="detail-value">${location}</span>
+                        </div>
+                    </div>
+                    
+                    <div class="detail-card">
+                        <h3>${t['availability']}</h3>
+                        <ul class="availability-list">
+                            ${availability.map(day => `<li>${day}</li>`).join('')}
+                        </ul>
+                    </div>
+                </div>
+            `;
+
+            // تحديث عنوان الصفحة
+            document.title = `${name} - ${currentLang === 'ar' ? 'بروفيل الطبيب' : 'Doctor Profile'}`;
+        }
+
+        // دالة حجز استشارة
+        function bookConsultation(doctorId) {
+            const doctor = doctors.find(d => d.id == doctorId);
+            const doctorName = currentLang === 'ar' ? doctor.name : doctor.nameEn;
+            alert(currentLang === 'ar' 
+                ? `سيتم حجز استشارة مع ${doctorName}` 
+                : `Booking a consultation with ${doctorName}`);
+        }
+
+        // دالة الاتصال بالطبيب
+        function contactDoctor(phone) {
+            alert(currentLang === 'ar' 
+                ? `سيتم الاتصال بالرقم: ${phone}` 
+                : `Calling: ${phone}`);
+        }
+
+        // تهيئة الصفحة عند التحميل
+        document.addEventListener('DOMContentLoaded', function() {
+            // تطبيق اللغة الحالية
+            document.documentElement.dir = currentLang === 'ar' ? 'rtl' : 'ltr';
+            document.documentElement.lang = currentLang;
+            
+            // تحديث أزرار اللغة
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                if (btn.textContent === (currentLang === 'ar' ? 'العربية' : 'English')) {
+                    btn.classList.add('active');
+                }
+            });
+            
+            displayDoctorProfile();
+        });
+    </script>
+</body>
+</html>
