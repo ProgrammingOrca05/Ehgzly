@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width,initial-scale=1" />
+	<title>نبذه عن العياده</title>
+	<link rel="stylesheet" href="style.css">
+</head>
+<body>
+		<header class="hero-card">
+			<div class="container">
+				<div>
+					<h1>نبذه عن العياده</h1>
+					<p>معلومات عن العياده وخدماتها</p>
+				</div>
+				<div class="user-greeting" id="user-greeting-area">
+					<!-- greeting injected by JS -->
+				</div>
+			</div>
+		</header>
+
+	<!-- main nav -->
+	<nav class="main-nav">
+		<div class="container nav-container">
+					<ul class="nav-list">
+						<li><a class="nav-link" href="home.html">الرئيسيه</a></li>
+						<li><a class="nav-link" href="appointments.html">الحجوزات</a></li>
+						<li><a class="nav-link" href="contactus.html">تواصل مع العياده</a></li>
+						<li><a class="nav-link" href="aboutus.html">نبذه عن العياده</a></li>
+						<li><a class="nav-link" href="controllPanel.html">لوحة التحكم</a></li>
+					</ul>
+			<button class="nav-toggle" aria-label="قائمة">☰</button>
+		</div>
+	</nav>
+
+	<main class="container" style="padding:24px 0;">
+		<section class="info-section two-col">
+			<div>
+				<h2>من نحن</h2>
+				<p>عيادة "مكالمة دكتور" تأسست عام 2018 بهدف تقديم استشارات طبية سريعة وآمنة عبر الإنترنت. لدينا فريق من الأطباء المتخصصين في مختلف التخصصات لتقديم تشخيص أولي، نصائح علاجية، وتوجيهات لخطوات المتابعة.</p>
+
+				<div class="services-grid" style="margin-top:18px;">
+					<div class="service-card">
+						<h4>استشارات عامة</h4>
+						<p>تواصل مع طبيب عام للفحص المبدئي وتوجيهك للحالة المناسبة.</p>
+					</div>
+					<div class="service-card">
+						<h4>متابعة مستمرة</h4>
+						<p>سجّل مواعيد متابعة وتتبع حالتك الصحية بسهولة عبر التطبيق.</p>
+					</div>
+					<div class="service-card">
+						<h4>توجيهات دوائية</h4>
+						<p>نقدم توصيات علاجية ونصائح دوائية بشكل آمن وموثوق.</p>
+					</div>
+				</div>
+			</div>
+
+			<aside class="contact-card">
+				<h3>ساعات العمل</h3>
+				<p>السبت - الخميس: 8 صباحًا - 6 مساءً</p>
+				<h3 style="margin-top:12px;">موقعنا</h3>
+				<p>شارع الصحة، الحي الطبي، القاهرة</p>
+				<h3 style="margin-top:12px;">اتصل بنا</h3>
+				<p>هاتف: 16545<br>واتساب: +201000000000</p>
+			</aside>
+		</section>
+
+		<section class="info-section">
+			<h2>فريق العمل</h2>
+			<div class="team-grid" style="margin-top:12px;">
+				<div class="team-member"><div class="avatar">👨‍⚕️</div><strong>د. أحمد محمود</strong><div>طبيب عام</div></div>
+				<div class="team-member"><div class="avatar">👩‍⚕️</div><strong>د. منى السيد</strong><div>أمراض قلب</div></div>
+				<div class="team-member"><div class="avatar">👨‍⚕️</div><strong>د. خالد عبد الرحمن</strong><div>أطفال</div></div>
+				<div class="team-member"><div class="avatar">👩‍⚕️</div><strong>د. سارة محمد</strong><div>جلدية</div></div>
+			</div>
+		</section>
+	</main>
+    
+    <!-- الفوتر -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+					<h4>عن احجزلي</h4>
+                    <p>نقدم لكم أفضل الخدمات الصحية عبر الإنترنت لتسهيل الوصول إلى الرعاية الطبية.</p>
+                </div>
+                <div class="footer-section">
+                    <h4>اتصل بنا</h4>
+                    <p>هاتف: 16545</p>
+                    <p>البريد الإلكتروني: info@doctorcall.com</p>
+                    <p>العنوان: القاهرة، مصر</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+				<p>© 2024 احجزلي. جميع الحقوق محفوظة.</p>
+            </div>
+        </div>
+    </footer>
+	<script>
+		// nav toggle (inline as requested)
+		(function(){
+			const toggle = document.querySelector('.nav-toggle');
+			const navList = document.querySelector('.nav-list');
+			if(!toggle || !navList) return;
+			toggle.addEventListener('click', ()=>navList.classList.toggle('active'));
+			navList.addEventListener('click', (e)=>{ if(e.target.matches('.nav-link')) navList.classList.remove('active'); });
+			document.addEventListener('click', (e)=>{ if(window.innerWidth<=768 && !e.target.closest('.main-nav') && navList.classList.contains('active')) navList.classList.remove('active'); });
+		})();
+
+		// render greeting and signout
+		(function(){
+			const area = document.getElementById('user-greeting-area');
+			if(!area) return;
+			try{
+				const raw = sessionStorage.getItem('ehgzly_user');
+				const type = sessionStorage.getItem('ehgzly_user_type');
+				if(!raw) return;
+				const user = JSON.parse(raw);
+				const name = user && user.name ? user.name : '';
+				const title = (type === 'doctor') ? `مرحبا دكتور ${name}` : `مرحبا سيد ${name}`;
+				area.innerHTML = `<div><span class="greet-text">${title}</span><br/><a href="#" class="signout-btn" id="signout-btn">تسجيل خروج</a></div>`;
+				document.getElementById('signout-btn').addEventListener('click', function(e){ e.preventDefault(); if(typeof performLogout === 'function'){ performLogout(); } else { localStorage.clear(); sessionStorage.clear(); document.cookie.split(";").forEach(c => document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/")); window.location.reload(); } });
+			}catch(e){}
+		})();
+	</script>
+</body>
+</html>

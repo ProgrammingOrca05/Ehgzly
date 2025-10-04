@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>احجزلي - الموقع الأول لحجز كشوفات بشكل أونلاين متكامل</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- الهيدر -->
+    <header>
+        <div class="container">
+            <div class="logo">
+                <h1>احجزلي</h1>
+                <p>الموقع الأول لحجز كشوفات بشكل أونلاين متكامل</p>
+            </div>
+            <div class="header-controls">
+                <a class="doctor-signup-btn" href="EnterAsDoctor.html">التسجيل كطبيب</a>
+                <a class="patient-signup-btn" href="EnterAsPatient.html">التسجيل كمريض</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- شريط التنقل العلوي -->
+    <nav class="main-nav">
+        <div class="container nav-container">
+            <ul class="nav-list">
+                <li class="nav-item"><a href="home.html" class="nav-link">الرئيسيه</a></li>
+                <li class="nav-item"><a href="appointments.html" class="nav-link">الحجوزات</a></li>
+                <li class="nav-item"><a href="contactus.html" class="nav-link">تواصل مع العياده</a></li>
+                <li class="nav-item"><a href="aboutus.html" class="nav-link">نبذه عن العياده</a></li>
+                <li class="nav-item"><a href="controllPanel.html" class="nav-link">لوحة التحكم</a></li>
+            </ul>
+            <button class="nav-toggle" aria-label="قائمة">☰</button>
+        </div>
+    </nav>
+
+    <!-- قسم البحث -->
+    <section class="hero">
+        <div class="container">
+            <div class="search-section">
+                <div class="search-box">
+                    <input type="text" id="doctor-search" placeholder="اكتب اسم الدكتور أو التخصص">
+                    <button id="search-btn">بحث</button>
+                </div>
+
+            
+            </div>
+        </div>
+    </section>
+
+    <!-- قسم الأطباء -->
+    <section class="doctors-section">
+        <div class="container">
+            <h3>الأطباء المتاحون</h3>
+            <div class="doctors-grid" id="doctors-grid">
+                <!-- سيتم تعبئة الأطباء هنا عبر JavaScript -->
+            </div>
+        </div>
+    </section>
+
+    <!-- الفوتر -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>عن مكالمة دكتور</h4>
+                    <p>نقدم لكم أفضل الخدمات الصحية عبر الإنترنت لتسهيل الوصول إلى الرعاية الطبية.</p>
+                </div>
+                <div class="footer-section">
+                    <h4>اتصل بنا</h4>
+                    <p>هاتف: 16545</p>
+                    <p>البريد الإلكتروني: info@doctorcall.com</p>
+                    <p>العنوان: القاهرة، مصر</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2024 مكالمة دكتور. جميع الحقوق محفوظة.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+    <script>
+        // Mobile nav toggle behaviour
+        (function(){
+            const toggle = document.querySelector('.nav-toggle');
+            const navList = document.querySelector('.nav-list');
+            if(!toggle || !navList) return;
+
+            toggle.addEventListener('click', function(){
+                navList.classList.toggle('active');
+            });
+
+            // Close when clicking any nav link (mobile)
+            navList.addEventListener('click', function(e){
+                if(e.target && e.target.matches('.nav-link')){
+                    navList.classList.remove('active');
+                }
+            });
+
+            // Close when clicking outside the nav on mobile
+            document.addEventListener('click', function(e){
+                if(window.innerWidth <= 768){
+                    if(!e.target.closest('.main-nav') && navList.classList.contains('active')){
+                        navList.classList.remove('active');
+                    }
+                }
+            });
+        })();
+    </script>
+</body>
+</html>

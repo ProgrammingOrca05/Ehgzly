@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width,initial-scale=1" />
+	<title>تواصل مع العياده</title>
+	<link rel="stylesheet" href="style.css">
+</head>
+<body>
+	<header class="hero-card">
+		<div class="container">
+			<div>
+				<h1>تواصل مع العياده</h1>
+				<p>طرق التواصل معنا عبر الهاتف أو الواتساب</p>
+			</div>
+			<div class="user-greeting" id="user-greeting-area">
+			  <!-- injected -->
+			</div>
+		</div>
+	</header>
+
+	<!-- main nav -->
+	<nav class="main-nav">
+		<div class="container nav-container">
+					<ul class="nav-list">
+						<li><a class="nav-link" href="home.html">الرئيسيه</a></li>
+						<li><a class="nav-link" href="appointments.html">الحجوزات</a></li>
+						<li><a class="nav-link" href="contactus.html">تواصل مع العياده</a></li>
+						<li><a class="nav-link" href="aboutus.html">نبذه عن العياده</a></li>
+						<li><a class="nav-link" href="controllPanel.html">لوحة التحكم</a></li>
+					</ul>
+			<button class="nav-toggle" aria-label="قائمة">☰</button>
+		</div>
+	</nav>
+
+	<main class="container" style="padding:24px 0;">
+		<section class="two-col">
+			<div class="info-section">
+				<h2>تواصل معنا</h2>
+				<p>فريق الدعم متاح للرد على استفساراتك وحجز المواعيد عبر الهاتف أو الواتساب.</p>
+
+				<div class="contact-list" style="margin-top:12px;">
+					<div class="contact-card">
+						<ul class="contact-list">
+							<li><strong>هاتف:</strong><span>16545</span></li>
+							<li><strong>واتساب:</strong><span>+201000000000</span></li>
+							<li><strong>بريد إلكتروني:</strong><span>info@doctorcall.com</span></li>
+							<li><strong>العنوان:</strong><span>شارع الصحة، الحي الطبي، القاهرة</span></li>
+						</ul>
+					</div>
+				</div>
+			</div>
+
+			<aside class="info-section">
+				<h3>أرسل لنا رسالة</h3>
+				<form class="contact-form" onsubmit="event.preventDefault(); alert('رسالتك تم إرسالها (اختبار فقط)'); this.reset();">
+					<input placeholder="الاسم" required />
+					<input placeholder="الايميل" type="email" required />
+					<input placeholder="الهاتف" />
+					<textarea placeholder="نص الرسالة" rows="5"></textarea>
+					<button class="btn-primary" type="submit">إرسال</button>
+				</form>
+			</aside>
+		</section>
+	</main>
+    
+    <!-- الفوتر -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+					<h4>عن احجزلي</h4>
+                    <p>نقدم لكم أفضل الخدمات الصحية عبر الإنترنت لتسهيل الوصول إلى الرعاية الطبية.</p>
+                </div>
+                <div class="footer-section">
+                    <h4>اتصل بنا</h4>
+                    <p>هاتف: 16545</p>
+                    <p>البريد الإلكتروني: info@doctorcall.com</p>
+                    <p>العنوان: القاهرة، مصر</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+				<p>© 2024 احجزلي. جميع الحقوق محفوظة.</p>
+            </div>
+        </div>
+    </footer>
+	<script>
+		// nav toggle (inline as requested)
+		(function(){
+			const toggle = document.querySelector('.nav-toggle');
+			const navList = document.querySelector('.nav-list');
+			if(!toggle || !navList) return;
+			toggle.addEventListener('click', ()=>navList.classList.toggle('active'));
+			navList.addEventListener('click', (e)=>{ if(e.target.matches('.nav-link')) navList.classList.remove('active'); });
+			document.addEventListener('click', (e)=>{ if(window.innerWidth<=768 && !e.target.closest('.main-nav') && navList.classList.contains('active')) navList.classList.remove('active'); });
+		})();
+
+		// render greeting and signout
+		(function(){
+			const area = document.getElementById('user-greeting-area');
+			if(!area) return;
+			try{
+				const raw = sessionStorage.getItem('ehgzly_user');
+				const type = sessionStorage.getItem('ehgzly_user_type');
+				if(!raw) return;
+				const user = JSON.parse(raw);
+				const name = user && user.name ? user.name : '';
+				const title = (type === 'doctor') ? `مرحبا دكتور ${name}` : `مرحبا سيد ${name}`;
+				area.innerHTML = `<div><span class="greet-text">${title}</span><br/><a href="#" class="signout-btn" id="signout-btn">تسجيل خروج</a></div>`;
+				document.getElementById('signout-btn').addEventListener('click', function(e){ e.preventDefault(); if(typeof performLogout === 'function'){ performLogout(); } else { localStorage.clear(); sessionStorage.clear(); document.cookie.split(";").forEach(c => document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/")); window.location.reload(); } });
+			}catch(e){}
+		})();
+	</script>
+</body>
+</html>

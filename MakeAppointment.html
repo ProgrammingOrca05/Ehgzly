@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>حجز استشارة</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    /* simple card styles for the appointment form */
+    .appt-container{max-width:720px;margin:28px auto;padding:18px;background:#fff;border-radius:10px;box-shadow:0 6px 20px rgba(0,0,0,0.06);}
+    h1{color:#2a7de1;margin-bottom:6px}
+    p.lead{color:#666;margin-bottom:18px}
+    label{display:block;margin:10px 0;font-weight:600;color:#333}
+    input[type="date"], input[type="time"], input[type="text"], textarea{width:100%;padding:10px;border:1px solid #ddd;border-radius:6px}
+    textarea{min-height:100px}
+    .row{display:flex;gap:12px}
+    .row .col{flex:1}
+    .actions{display:flex;gap:12px;justify-content:flex-start;margin-top:14px}
+    .btn{background:#2a7de1;color:#fff;padding:10px 16px;border-radius:6px;border:none;cursor:pointer}
+    .btn.secondary{background:#6c757d}
+    .form-error{color:#c00;margin-top:8px}
+    .diagnostics{font-size:13px;color:#666;margin-top:12px;background:#f8f9fa;padding:8px;border-radius:6px}
+  </style>
+</head>
+<body>
+  <div class="appt-container">
+    <h1>حجز استشارة</h1>
+    <p class="lead">املأ البيانات التالية لحجز استشارة مع الطبيب.</p>
+
+    <div id="doctor-summary" style="margin-bottom:16px"></div>
+
+    <form id="appt-form">
+      <label for="fld-date">التاريخ:</label>
+      <input id="fld-date" name="date" type="date" required />
+
+      <label for="fld-time">الوقت:</label>
+      <input id="fld-time" name="time" type="time" required />
+
+      <label for="fld-notes">ملاحظات طبيه إضافيه:</label>
+      <textarea id="fld-notes" name="notes" placeholder="أدخل أي ملاحظات طبية هنا (اختياري)"></textarea>
+
+      <label for="fld-phone">رقم الهاتف أو التواصل:</label>
+      <input id="fld-phone" name="phone" type="text" placeholder="مثال: +201022233344" required />
+
+      <div class="actions">
+        <button class="btn" type="submit">تأكيد الحجز</button>
+        <button type="button" class="btn secondary" id="cancel-btn">إلغاء</button>
+      </div>
+
+      <div id="form-msg" class="form-error" style="display:none"></div>
+      <div id="form-diagnostics" class="diagnostics" style="display:none"></div>
+    </form>
+  </div>
+
+  <script src="MakeAppointment.js"></script>
+</body>
+</html>

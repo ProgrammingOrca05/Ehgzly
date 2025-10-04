@@ -1,70 +1,38 @@
-// بيانات التطبيق
-let currentLang = 'ar';
+// Arabic-only labels and mappings
+const LABELS = {
+    siteTitle: 'احجزلي - الموقع الأول لحجز كشوفات بشكل أونلاين متكامل',
+    siteTagline: 'الموقع الأول لحجز كشوفات بشكل أونلاين متكامل',
+    searchPlaceholder: 'اكتب اسم الدكتور أو التخصص',
+    searchBtn: 'بحث',
+    chooseSpecialty: 'اختر التخصص',
+    chooseGovernorate: 'اختر المحافظة',
+    chooseInsurance: 'اختر التأمين',
+    availableDoctors: 'الأطباء المتاحون',
+    viewProfile: 'عرض البروفيل',
+    experience: 'سنوات الخبرة',
+    consultationFee: 'رسوم الاستشارة',
+    about: 'عن احجزلي',
+    aboutText: 'نقدم لكم أفضل الخدمات الصحية عبر الإنترنت لتسهيل الوصول إلى الرعاية الطبية عبر حجز إلكتروني متكامل.',
+    contact: 'اتصل بنا',
+    copyright: '© 2024 احجزلي. جميع الحقوق محفوظة.',
+    years: 'سنوات',
+    currency: 'جنيه'
+};
 
-// بيانات الترجمة
-const translations = {
-    'ar': {
-        'site-title': 'مكالمة دكتور - استشارات طبية',
-        'site-tagline': 'استشارة طبية عبر مكالمة مع دكتور متخصص',
-        'search-placeholder': 'اكتب اسم الدكتور أو التخصص',
-        'search-btn': 'بحث',
-        'choose-specialty': 'اختر التخصص',
-        'choose-governorate': 'اختر المحافظة',
-        'choose-insurance': 'اختر التأمين',
-        'available-doctors': 'الأطباء المتاحون',
-        'view-profile': 'عرض البروفيل',
-        'experience': 'سنوات الخبرة',
-        'consultation-fee': 'رسوم الاستشارة',
-        'about': 'عن مكالمة دكتور',
-        'about-text': 'نقدم لكم أفضل الخدمات الصحية عبر الإنترنت لتسهيل الوصول إلى الرعاية الطبية.',
-        'contact': 'اتصل بنا',
-        'copyright': '© 2024 مكالمة دكتور. جميع الحقوق محفوظة.',
-        
-        // التخصصات
-        'general-medicine': 'طب عام',
-        'cardiology': 'أمراض القلب',
-        'pediatrics': 'طب الأطفال',
-        'dermatology': 'الأمراض الجلدية',
-        'orthopedics': 'جراحة العظام',
-        'gynecology': 'نساء وتوليد',
-        
-        // المحافظات
-        'cairo': 'القاهرة',
-        'giza': 'الجيزة',
-        'alexandria': 'الإسكندرية',
-        'sharqia': 'الشرقية'
-    },
-    'en': {
-        'site-title': 'Doctor Call - Medical Consultations',
-        'site-tagline': 'Medical consultation via call with a specialist doctor',
-        'search-placeholder': 'Type doctor name or specialty',
-        'search-btn': 'Search',
-        'choose-specialty': 'Choose Specialty',
-        'choose-governorate': 'Choose Governorate',
-        'choose-insurance': 'Choose Insurance',
-        'available-doctors': 'Available Doctors',
-        'view-profile': 'View Profile',
-        'experience': 'Years of Experience',
-        'consultation-fee': 'Consultation Fee',
-        'about': 'About Doctor Call',
-        'about-text': 'We provide the best online healthcare services to facilitate access to medical care.',
-        'contact': 'Contact Us',
-        'copyright': '© 2024 Doctor Call. All rights reserved.',
-        
-        // التخصصات
-        'general-medicine': 'General Medicine',
-        'cardiology': 'Cardiology',
-        'pediatrics': 'Pediatrics',
-        'dermatology': 'Dermatology',
-        'orthopedics': 'Orthopedics',
-        'gynecology': 'Gynecology',
-        
-        // المحافظات
-        'cairo': 'Cairo',
-        'giza': 'Giza',
-        'alexandria': 'Alexandria',
-        'sharqia': 'Sharqia'
-    }
+const specialtyNames = {
+    'general-medicine': 'طب عام',
+    'cardiology': 'أمراض القلب',
+    'pediatrics': 'طب الأطفال',
+    'dermatology': 'الأمراض الجلدية',
+    'orthopedics': 'جراحة العظام',
+    'gynecology': 'نساء وتوليد'
+};
+
+const governorateNames = {
+    cairo: 'القاهرة',
+    giza: 'الجيزة',
+    alexandria: 'الإسكندرية',
+    sharqia: 'الشرقية'
 };
 
 // بيانات الأطباء (fallback local data)
@@ -73,10 +41,7 @@ let doctors = [
         id: 1,
         name: 'د. أحمد محمود',
         nameEn: 'Dr. Ahmed Mahmoud',
-        specialty: 'general-medicine',
-        location: 'cairo',
-        locationText: 'مصر الجديدة',
-        locationTextEn: 'New Cairo',
+    specialization: 'general-medicine',
         rating: 4.2,
         image: '👨‍⚕️',
         description: 'طبيب عام بخبرة تزيد عن 10 سنوات في تشخيص وعلاج الأمراض الشائعة.',
@@ -85,21 +50,18 @@ let doctors = [
         education: 'كلية الطب - جامعة القاهرة',
         educationEn: 'Faculty of Medicine - Cairo University',
         languages: ['العربية', 'الإنجليزية'],
-        consultationFee: 200,
+        examinationPrice: 200,
         phone: '+201000000001',
         email: 'dr.ahmed@doctorcall.com',
         availability: ['السبت', 'الأحد', 'الاثنين', 'الثلاثاء', 'الأربعاء'],
         availabilityEn: ['Saturday', 'Sunday', 'Monday', 'Tuesday', 'Wednesday'],
-        workingHours: '9:00 ص - 5:00 م'
+        workHrs: '9:00 ص - 5:00 م'
     },
     {
         id: 2,
         name: 'د. منى السيد',
         nameEn: 'Dr. Mona El Sayed',
-        specialty: 'cardiology',
-        location: 'giza',
-        locationText: 'الدقي',
-        locationTextEn: 'Dokki',
+    specialization: 'cardiology',
         rating: 4.8,
         image: '👩‍⚕️',
         description: 'استشارية أمراض القلب بمستشفى القصر العيني، متخصصة في قسطرة القلب والفحوصات الدقيقة.',
@@ -108,21 +70,18 @@ let doctors = [
         education: 'كلية الطب - جامعة عين شمس',
         educationEn: 'Faculty of Medicine - Ain Shams University',
         languages: ['العربية', 'الإنجليزية', 'الفرنسية'],
-        consultationFee: 350,
+    examinationPrice: 350,
         phone: '+201000000002',
         email: 'dr.mona@doctorcall.com',
         availability: ['السبت', 'الاثنين', 'الأربعاء'],
         availabilityEn: ['Saturday', 'Monday', 'Wednesday'],
-        workingHours: '10:00 ص - 4:00 م'
+        workHrs: '10:00 ص - 4:00 م'
     },
     {
         id: 3,
         name: 'د. خالد عبد الرحمن',
         nameEn: 'Dr. Khaled Abdel Rahman',
-        specialty: 'pediatrics',
-        location: 'alexandria',
-        locationText: 'سموحة',
-        locationTextEn: 'Smouha',
+    specialization: 'pediatrics',
         rating: 4.5,
         image: '👨‍⚕️',
         description: 'طبيب أطفال متخصص في أمراض حديثي الولادة والتحصينات.',
@@ -131,21 +90,18 @@ let doctors = [
         education: 'كلية الطب - جامعة الإسكندرية',
         educationEn: 'Faculty of Medicine - Alexandria University',
         languages: ['العربية', 'الإنجليزية'],
-        consultationFee: 250,
+    examinationPrice: 250,
         phone: '+201000000003',
         email: 'dr.khaled@doctorcall.com',
         availability: ['الأحد', 'الثلاثاء', 'الخميس'],
         availabilityEn: ['Sunday', 'Tuesday', 'Thursday'],
-        workingHours: '11:00 ص - 7:00 م'
+        workHrs: '11:00 ص - 7:00 م'
     },
     {
         id: 4,
         name: 'د. سارة محمد',
         nameEn: 'Dr. Sara Mohamed',
-        specialty: 'dermatology',
-        location: 'cairo',
-        locationText: 'مدينة نصر',
-        locationTextEn: 'Nasr City',
+    specialization: 'dermatology',
         rating: 4.7,
         image: '👩‍⚕️',
         description: 'استشارية الأمراض الجلدية والتجميل، متخصصة في علاج حب الشباب والأمراض الجلدية المزمنة.',
@@ -154,21 +110,18 @@ let doctors = [
         education: 'كلية الطب - جامعة القاهرة',
         educationEn: 'Faculty of Medicine - Cairo University',
         languages: ['العربية', 'الإنجليزية', 'الألمانية'],
-        consultationFee: 300,
+    examinationPrice: 300,
         phone: '+201000000004',
         email: 'dr.sara@doctorcall.com',
         availability: ['السبت', 'الأحد', 'الاثنين', 'الأربعاء'],
         availabilityEn: ['Saturday', 'Sunday', 'Monday', 'Wednesday'],
-        workingHours: '9:00 ص - 3:00 م'
+        workHrs: '9:00 ص - 3:00 م'
     },
     {
         id: 5,
         name: 'د. عمرو حسن',
         nameEn: 'Dr. Amr Hassan',
-        specialty: 'orthopedics',
-        location: 'giza',
-        locationText: 'المهندسين',
-        locationTextEn: 'Mohandessin',
+    specialization: 'orthopedics',
         rating: 4.6,
         image: '👨‍⚕️',
         description: 'استشاري جراحة العظام والمفاصل، متخصص في جراحات العمود الفقري والمناظير.',
@@ -177,21 +130,18 @@ let doctors = [
         education: 'كلية الطب - جامعة عين شمس',
         educationEn: 'Faculty of Medicine - Ain Shams University',
         languages: ['العربية', 'الإنجليزية'],
-        consultationFee: 400,
+    examinationPrice: 400,
         phone: '+201000000005',
         email: 'dr.amr@doctorcall.com',
         availability: ['الأحد', 'الثلاثاء', 'الخميس'],
         availabilityEn: ['Sunday', 'Tuesday', 'Thursday'],
-        workingHours: '8:00 ص - 2:00 م'
+        workHrs: '8:00 ص - 2:00 م'
     },
     {
         id: 6,
         name: 'د. ياسمين فؤاد',
         nameEn: 'Dr. Yasmine Fouad',
-        specialty: 'gynecology',
-        location: 'cairo',
-        locationText: 'الزمالك',
-        locationTextEn: 'Zamalek',
+    specialization: 'gynecology',
         rating: 4.9,
         image: '👩‍⚕️',
         description: 'استشارية النساء والتوليد، متخصصة في متابعة الحمل والولادة الطبيعية والقيصرية.',
@@ -200,92 +150,85 @@ let doctors = [
         education: 'كلية الطب - جامعة القاهرة',
         educationEn: 'Faculty of Medicine - Cairo University',
         languages: ['العربية', 'الإنجليزية', 'الإسبانية'],
-        consultationFee: 320,
+    examinationPrice: 320,
         phone: '+201000000006',
         email: 'dr.yasmine@doctorcall.com',
         availability: ['السبت', 'الاثنين', 'الأربعاء', 'الجمعة'],
         availabilityEn: ['Saturday', 'Monday', 'Wednesday', 'Friday'],
-        workingHours: '10:00 ص - 6:00 م'
+        workHrs: '10:00 ص - 6:00 م'
     }
 ];
 
 // دالة تطبيق اللغة
-function applyLanguage(lang) {
-    const t = translations[lang];
-    if (!t) return;
+function initUI() {
+    document.documentElement.dir = 'rtl';
+    document.documentElement.lang = 'ar';
+    document.title = LABELS.siteTitle;
+    document.querySelector('.logo p').textContent = LABELS.siteTagline;
+    const searchEl = document.getElementById('doctor-search');
+    if (searchEl) searchEl.placeholder = LABELS.searchPlaceholder;
+    const searchBtn = document.getElementById('search-btn');
+    if (searchBtn) searchBtn.textContent = LABELS.searchBtn;
+    const doctorsH3 = document.querySelector('.doctors-section h3');
+    if (doctorsH3) doctorsH3.textContent = LABELS.availableDoctors;
+    // footer
+    const footerSections = document.querySelectorAll('.footer-section');
+    if (footerSections[0]) footerSections[0].querySelector('h4').textContent = LABELS.about;
+    if (footerSections[0]) footerSections[0].querySelector('p').textContent = LABELS.aboutText;
+    if (footerSections[1]) footerSections[1].querySelector('h4').textContent = LABELS.contact;
+    const footerBottom = document.querySelector('.footer-bottom p');
+    if (footerBottom) footerBottom.textContent = LABELS.copyright;
 
-    currentLang = lang;
-    document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
-    document.documentElement.lang = lang;
-    document.title = t['site-title'];
-
-    // تحديث النصوص
-    document.querySelector('.logo p').textContent = t['site-tagline'];
-    document.getElementById('doctor-search').placeholder = t['search-placeholder'];
-    document.getElementById('search-btn').textContent = t['search-btn'];
-    document.querySelector('.doctors-section h3').textContent = t['available-doctors'];
-    document.querySelector('.footer-section h4').textContent = t['about'];
-    document.querySelector('.footer-section p').textContent = t['about-text'];
-    document.querySelectorAll('.footer-section h4')[1].textContent = t['contact'];
-    document.querySelector('.footer-bottom p').textContent = t['copyright'];
-
-    // تحديث القوائم المنسدلة
-    updateSelectOptions('specialty', t['choose-specialty'], [
-        { value: 'general-medicine', text: t['general-medicine'] },
-        { value: 'cardiology', text: t['cardiology'] },
-        { value: 'pediatrics', text: t['pediatrics'] },
-        { value: 'dermatology', text: t['dermatology'] },
-        { value: 'orthopedics', text: t['orthopedics'] },
-        { value: 'gynecology', text: t['gynecology'] }
+    updateSelectOptions('specialty', LABELS.chooseSpecialty, [
+        { value: 'general-medicine', text: specialtyNames['general-medicine'] },
+        { value: 'cardiology', text: specialtyNames['cardiology'] },
+        { value: 'pediatrics', text: specialtyNames['pediatrics'] },
+        { value: 'dermatology', text: specialtyNames['dermatology'] },
+        { value: 'orthopedics', text: specialtyNames['orthopedics'] },
+        { value: 'gynecology', text: specialtyNames['gynecology'] }
     ]);
 
-    updateSelectOptions('governorate', t['choose-governorate'], [
-        { value: 'cairo', text: t['cairo'] },
-        { value: 'giza', text: t['giza'] },
-        { value: 'alexandria', text: t['alexandria'] },
-        { value: 'sharqia', text: t['sharqia'] }
+    updateSelectOptions('governorate', LABELS.chooseGovernorate, [
+        { value: 'cairo', text: governorateNames.cairo },
+        { value: 'giza', text: governorateNames.giza },
+        { value: 'alexandria', text: governorateNames.alexandria },
+        { value: 'sharqia', text: governorateNames.sharqia }
     ]);
 
-    updateSelectOptions('insurance', t['choose-insurance'], [
+    updateSelectOptions('insurance', LABELS.chooseInsurance, [
         { value: 'health', text: 'التأمين الصحي' },
         { value: 'private', text: 'تأمين خاص' },
         { value: 'cash', text: 'نقدي' }
     ]);
-
-    // إعادة عرض الأطباء
-    displayDoctors();
 }
 
 // حاول جلب الأطباء من الـ API الخلفي، إن فشل استخدم البيانات المحلية
 async function fetchDoctorsFromAPI() {
     try {
-        const res = await fetch('http://localhost:1080/api/doctors');
+        // API base URL (use the deployed backend by default)
+        const API_BASE_URL = window.API_BASE_URL || 'https://ehgzly-production.up.railway.app/api';
+        const res = await fetch(`${API_BASE_URL}/doctors`);
         if (!res.ok) throw new Error('Network response was not ok');
         const json = await res.json();
         if (json && json.status === 'success' && Array.isArray(json.data)) {
             // تحويل البيانات من الـ API إلى شكل يستخدمه الواجهة (قدر الإمكان)
             doctors = json.data.map((d, idx) => ({
+                _id: d._id || d.id || null,
                 id: d._id || d.id || idx + 1,
-                name: d.name || d.nameAr || d.nameEn || 'دكتور',
-                nameEn: d.nameEn || d.name || 'Doctor',
-                specialty: (d.specialization && d.specialization.toLowerCase()) || d.specialty || 'general-medicine',
-                location: d.location || 'cairo',
-                locationText: d.locationText || '',
-                locationTextEn: d.locationTextEn || '',
-                rating: d.rating || 4.5,
+                name: d.name || '',
+                email: d.email || '',
+                specialization: d.specialization || d.specialization || '',
+                about: d.about || d.description || '',
+                workHrs: d.workHrs || d.workHrs || '',
+                examinationPrice: (typeof d.examinationPrice !== 'undefined' && d.examinationPrice !== null) ? d.examinationPrice : 200,
+                // keep UI-friendly/legacy fields empty or derived if needed
                 image: d.image || '👨‍⚕️',
-                description: d.about || d.description || '',
-                descriptionEn: d.descriptionEn || d.about || '',
-                experience: d.experience || 5,
+                rating: (typeof d.rating !== 'undefined' && d.rating !== null) ? d.rating : 5,
+                experience: (typeof d.experience !== 'undefined' && d.experience !== null) ? d.experience : 5,
                 education: d.education || '',
-                educationEn: d.educationEn || '',
-                languages: d.languages || ['العربية'],
-                consultationFee: d.examinationPrice || d.consultationFee || 200,
+                languages: (d.languages && d.languages.length) ? d.languages : ['عربي'],
                 phone: d.phone || '',
-                email: d.email || d.contact || '',
-                availability: d.availability || [],
-                availabilityEn: d.availabilityEn || [],
-                workingHours: d.workHrs || d.wrkHrs || d.workingHours || ''
+                availability: d.availability || []
             }));
         }
     } catch (err) {
@@ -311,18 +254,17 @@ function displayDoctors() {
     if (!doctorsGrid) return;
 
     doctorsGrid.innerHTML = '';
-    const t = translations[currentLang];
+    // Arabic-only labels
 
     doctors.forEach(doctor => {
         const doctorCard = document.createElement('div');
         doctorCard.className = 'doctor-card';
         doctorCard.setAttribute('data-doctor-id', doctor.id);
 
-        const name = currentLang === 'ar' ? doctor.name : doctor.nameEn;
-        const specialty = t[doctor.specialty] || doctor.specialty;
-        const governorate = t[doctor.location] || doctor.location;
-        const locationText = currentLang === 'ar' ? doctor.locationText : doctor.locationTextEn;
-        const location = `${governorate} - ${locationText}`;
+    const name = doctor.name;
+    const specialty = specialtyNames[doctor.specialization] || doctor.specialization || '';
+    const rawRating = Number(doctor.rating);
+    const ratingNum = Number.isFinite(rawRating) ? Math.min(5, Math.max(0, Math.round(rawRating))) : 5;
 
         doctorCard.innerHTML = `
             <div class="doctor-image">
@@ -331,23 +273,22 @@ function displayDoctors() {
             <div class="doctor-info">
                 <h4>${name}</h4>
                 <p class="specialty">${specialty}</p>
-                <p class="location">${location}</p>
-                <div class="rating">
-                    <span class="stars">${'★'.repeat(Math.floor(doctor.rating))}${'☆'.repeat(5 - Math.floor(doctor.rating))}</span>
-                    <span class="rating-text">(${doctor.rating})</span>
+                    <div class="rating">
+                    <span class="stars">${'★'.repeat(ratingNum)}${'☆'.repeat(5 - ratingNum)}</span>
+                    <span class="rating-text">(${ratingNum})</span>
                 </div>
                 <div class="doctor-details">
                     <div class="detail-item">
-                        <span>${t['experience']}: </span>
-                        <span class="detail-value">${doctor.experience} ${currentLang === 'ar' ? 'سنوات' : 'years'}</span>
+                        <span>${LABELS.experience}: </span>
+                        <span class="detail-value">${(typeof doctor.experience !== 'undefined' && doctor.experience !== null) ? doctor.experience : 5} ${LABELS.years}</span>
                     </div>
                     <div class="detail-item">
-                        <span>${t['consultation-fee']}: </span>
-                        <span class="detail-value">${doctor.consultationFee} ${currentLang === 'ar' ? 'جنيه' : 'EGP'}</span>
+                        <span>سعر الفحص: </span>
+                        <span class="detail-value">${doctor.examinationPrice || 0} ${LABELS.currency}</span>
                     </div>
                 </div>
                 <button class="view-profile-btn">
-                    ${t['view-profile']}
+                    ${LABELS.viewProfile}
                 </button>
             </div>
         `;
@@ -367,7 +308,8 @@ function viewDoctorProfile(doctorId) {
     localStorage.setItem('selectedDoctorId', doctorId);
     
     // فتح صفحة البروفيل في نافذة جديدة
-    window.open('doctor-profile.html?id=' + encodeURIComponent(doctorId), '_blank');
+    // open profile in the same tab instead of a new tab
+    location.href = 'doctor-profile.html?id=' + encodeURIComponent(doctorId);
 }
 
 // دالة البحث
@@ -377,30 +319,12 @@ function performSearch() {
     const governorate = document.getElementById('governorate').value;
 
     if (searchTerm || specialty || governorate) {
-        alert(currentLang === 'ar' 
-            ? `جاري البحث عن: ${searchTerm || 'جميع الأطباء'}`
-            : `Searching for: ${searchTerm || 'all doctors'}`
-        );
+        alert(`جاري البحث عن: ${searchTerm || 'جميع الأطباء'}`);
     }
 }
 
 // إعداد أزرار اللغة
-function setupLanguageSwitcher() {
-    document.getElementById('lang-ar').addEventListener('click', function() {
-        applyLanguage('ar');
-        updateLanguageButtons('ar');
-    });
-
-    document.getElementById('lang-en').addEventListener('click', function() {
-        applyLanguage('en');
-        updateLanguageButtons('en');
-    });
-}
-
-function updateLanguageButtons(lang) {
-    document.getElementById('lang-ar').classList.toggle('active', lang === 'ar');
-    document.getElementById('lang-en').classList.toggle('active', lang === 'en');
-}
+// No language switcher: Arabic only
 
 // إعداد البحث
 function setupSearch() {
@@ -410,10 +334,59 @@ function setupSearch() {
     });
 }
 
+// تهيئة حالة الهيدر الخاصة بالمستخدم (عرض تحية للطبيب عند تسجيل الدخول)
+function initHeaderAuth() {
+    try {
+        const headerControls = document.querySelector('.header-controls');
+        if (!headerControls) return;
+
+        const raw = sessionStorage.getItem('ehgzly_user');
+        if (!raw) return; // not logged in
+
+        const user = JSON.parse(raw);
+        const name = (user && (user.name || user.username)) ? String(user.name || user.username) : '';
+        const userType = sessionStorage.getItem('ehgzly_user_type') || 'patient';
+
+        // بناء عنصر التحية
+        headerControls.innerHTML = '';
+        const greet = document.createElement('div');
+        greet.className = (userType === 'doctor') ? 'doctor-greeting' : 'patient-greeting';
+        greet.textContent = (userType === 'doctor') ? `مرحبا دكتور ${name}` : `مرحبا ${name}`;
+
+        // إضافة زر خروج بسيط (اختياري)
+        const logout = document.createElement('a');
+        logout.href = '#';
+        logout.className = (userType === 'doctor') ? 'doctor-logout' : 'patient-logout';
+        logout.textContent = 'تسجيل خروج';
+        logout.style.marginRight = '12px';
+        logout.addEventListener('click', function(ev) {
+            ev.preventDefault();
+            if (typeof performLogout === 'function') return performLogout();
+            // fallback: clear storages and expire cookies
+            try{ localStorage.clear(); sessionStorage.clear(); }catch(e){}
+            try{ document.cookie.split(";").forEach(c => document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/")); }catch(e){}
+            window.location.reload();
+        });
+
+        headerControls.appendChild(greet);
+        headerControls.appendChild(logout);
+    } catch (err) {
+        console.warn('initHeaderAuth error:', err && err.message);
+    }
+}
+
 // تهيئة التطبيق
 document.addEventListener('DOMContentLoaded', function() {
-    setupLanguageSwitcher();
+    initUI();
     setupSearch();
-    // حاول تحميل الأطباء من الـ backend ثم طبق اللغة وعرضهم
-    fetchDoctorsFromAPI().then(() => applyLanguage(currentLang));
+    initHeaderAuth();
+    // حاول تحميل الأطباء من الـ backend ثم عرضهم
+    fetchDoctorsFromAPI().then(() => displayDoctors());
 });
+
+// global logout helper (clears storages and all cookies)
+function performLogout(){
+    try{ localStorage.clear(); sessionStorage.clear(); }catch(e){}
+    try{ document.cookie.split(";").forEach(c => document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/")); }catch(e){}
+    window.location.reload();
+}
