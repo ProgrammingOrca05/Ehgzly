@@ -32,16 +32,93 @@
 
   function validateTime(t){ return /^([01]\d|2[0-3]):([0-5]\d)$/.test(t); }
 
+  // Parse workHrs string into { min: 'HH:MM', max: 'HH:MM' } in 24-hour time
+  function parseWorkHrs(workHrs){
+    try{
+      if(!workHrs) return null;
+  // normalize Arabic AM/PM markers
+  let s = String(workHrs).replace(/\u0635/g,'AM').replace(/\u0645/g,'PM'); // ص -> AM, م -> PM
+  // replace Arabic direction mark and collapse multiple spaces
+  s = s.replace(/\u200f/g,' ').replace(/\s+/g, ' ').trim();
+      // common separators '-', '–'
+      const parts = s.split(/[-–]/).map(p=>p.trim()).filter(Boolean);
+      if(parts.length < 2) return null;
+      const p0 = parts[0]; const p1 = parts[1];
+      const t0 = to24HourTime(p0);
+      const t1 = to24HourTime(p1);
+      if(!t0 || !t1) return null;
+      return { min: t0, max: t1 };
+    }catch(e){ return null; }
+  }
+
+  // Convert human time like '9:00 AM' or '9:00' or '9:00 ص' or '17:00' to 'HH:MM' 24-hour
+  function to24HourTime(ts){
+    try{
+      if(!ts) return null;
+      let s = String(ts).trim();
+      // replace Arabic AM/PM
+      s = s.replace(/\u0635/g,'AM').replace(/\u0645/g,'PM');
+      // remove extra words
+      s = s.replace(/\s+/g,' ').trim();
+      // match H[:MM] optionally with AM/PM (handles '8am', '8:30am', '17:00')
+      let m = s.match(/^(\d{1,2})(?::(\d{2}))?\s*(AM|PM|am|pm)?$/);
+      if(m){
+        let hh = Number(m[1]); const mm = m[2] ? String(Number(m[2])).padStart(2,'0') : '00'; const ampm = m[3] ? m[3].toLowerCase() : null;
+        if(ampm){ if(ampm === 'pm' && hh < 12) hh += 12; if(ampm === 'am' && hh === 12) hh = 0; }
+        return `${String(hh).padStart(2,'0')}:${mm}`;
+      }
+      // try Date parse (1970-01-01T...) fallback
+      const d = new Date('1970-01-01T' + s);
+      if(!Number.isNaN(d.getTime())) return d.toTimeString().slice(0,5);
+      return null;
+    }catch(e){ return null; }
+  }
+
+  function formatTimeForDisplay(hhmm){ if(!hhmm) return ''; try{ const [hh,mm] = hhmm.split(':'); const d = new Date(); d.setHours(Number(hh)); d.setMinutes(Number(mm)); return d.toLocaleTimeString('ar-EG',{hour:'2-digit',minute:'2-digit', hour12: true}); }catch(e){ return hhmm; } }
+
   document.addEventListener('DOMContentLoaded', async ()=>{
     const docId = getDoctorId();
     const summaryEl = qs('#doctor-summary');
-    if(!docId){ summaryEl.innerHTML = '<div style="color:#c00">لم يتم تحديد معرّف الطبيب في الرابط.</div>'; }
-    else{
-      // try to show doctor's name/fee
-      const d = await fetchDoctor(docId);
-      if(d){ summaryEl.innerHTML = `<strong>الطبيب:</strong> ${d.name||d.fullName||d.nameEn||'---'} &nbsp; <span style="color:#666">رسوم الكشف: ${d.examinationPrice||''} ج.م</span>`; }
-      else{ summaryEl.innerHTML = `<strong>الطبيب:</strong> (بيانات غير متاحة)`; }
+    if(!docId){
+      summaryEl.innerHTML = '<div style="color:#c00">لم يتم تحديد معرّف الطبيب في الرابط.</div>';
+      return;
     }
+    // fetch doctor once and reuse
+    const d = await fetchDoctor(docId);
+    if(d){
+      summaryEl.innerHTML = `<strong>الطبيب:</strong> ${d.name||d.fullName||d.nameEn||'---'} &nbsp; <span style="color:#666">رسوم الكشف: ${d.examinationPrice||''} ج.م</span>`;
+    } else {
+      summaryEl.innerHTML = `<strong>الطبيب:</strong> (بيانات غير متاحة)`;
+    }
+
+    // Set min date to today to prevent past date selection
+    try{
+      const dateInput = qs('#fld-date');
+      if(dateInput){
+        const today = new Date();
+        const yyyy = today.getFullYear();
+        const mm = String(today.getMonth()+1).padStart(2,'0');
+        const dd = String(today.getDate()).padStart(2,'0');
+        dateInput.min = `${yyyy}-${mm}-${dd}`;
+      }
+    }catch(e){}
+
+    // If we fetched doctor data, attempt to configure time input limits based on workHrs
+    try{
+      const timeInput = qs('#fld-time');
+      let hrs = d && d.workHrs ? d.workHrs : '12pm-4pm'; // default
+      const rng = parseWorkHrs(hrs) || parseWorkHrs('12pm-4pm');
+      if(rng && timeInput){
+        if(rng.min) timeInput.min = rng.min;
+        if(rng.max) timeInput.max = rng.max;
+        // clamp current value if present
+        if(timeInput.value){
+          if(timeInput.value < timeInput.min) timeInput.value = timeInput.min;
+          if(timeInput.value > timeInput.max) timeInput.value = timeInput.max;
+        }
+        if(summaryEl) summaryEl.innerHTML += `<div style="margin-top:6px;color:#666;font-size:13px">ساعات العمل: ${hrs} (متاح من ${formatTimeForDisplay(rng.min)} إلى ${formatTimeForDisplay(rng.max)})</div>`;
+      }
+    }catch(e){ console.warn('workHrs parse error', e); }
 
     // cancel button
     qs('#cancel-btn').addEventListener('click', ()=>{ history.back(); });
@@ -55,6 +132,26 @@
       const time = qs('#fld-time').value;
       const notes = qs('#fld-notes').value.trim();
       const phone = qs('#fld-phone').value.trim();
+
+      // validate date not in past
+      try{
+        if(date){
+          const selected = new Date(date + 'T00:00:00');
+          const today = new Date();
+          today.setHours(0,0,0,0);
+          if(selected < today){ showMsg('الرجاء اختيار تاريخ مساوي أو بعد تاريخ اليوم.', true); return; }
+        }
+      }catch(e){}
+
+      // validate time against doctor's work hours (if min/max set on input)
+      try{
+        const timeInput = qs('#fld-time');
+        if(timeInput && timeInput.min && timeInput.max && time){
+          if(time < timeInput.min || time > timeInput.max){
+            showMsg('الرجاء اختيار وقت داخل ساعات عمل الطبيب.', true); return;
+          }
+        }
+      }catch(e){}
 
       if(!date){ showMsg('الرجاء اختيار التاريخ.', true); return; }
       if(!time || !validateTime(time)){ showMsg('الرجاء إدخال وقت صالح بصيغة HH:MM.', true); return; }

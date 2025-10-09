@@ -55,7 +55,12 @@
   function renderList(items){
     if(!items || !items.length) return renderEmpty();
     const html = items.map(it=>{
-      const dateStr = it.date ? (new Date(it.date)).toLocaleString('ar-EG',{year:'numeric',month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'}) : '';
+        // Date-only display (from it.date)
+        const dateOnly = it.date ? formatDateOnly(it.date) : '';
+    // Prefer explicit it.time from API; parse and format into 12-hour form; fallback to time extracted from it.date if missing
+    const timeFromApiRaw = (it.time && String(it.time).trim()) ? String(it.time).trim() : '';
+    const timeFromApi = timeFromApiRaw ? formatTimeFromApi(timeFromApiRaw) : '';
+    const timeOnly = timeFromApi || (it.date ? formatTimeOnlyFromIso(it.date) : '');
       const docName = (it.doctor && (it.doctor.name||it.doctor.fullName)) ? (it.doctor.name||it.doctor.fullName) : (it.doctor && it.doctor.nameEn ? it.doctor.nameEn : 'دكتور');
       const patName = (it.patient && (it.patient.name||it.patient.fullName)) ? (it.patient.name||it.patient.fullName) : (it.patient && it.patient.nameEn ? it.patient.nameEn : 'مريض');
       const status = (it.status || '').toString().toLowerCase();
@@ -64,7 +69,8 @@
       const isClickable = status === 'scheduled';
       const cardHtml = `
         <div class="appt-card ${statusClass}">
-          <div class="appt-date">${dateStr}</div>
+            <div class="appt-date">${dateOnly}</div>
+            <div class="appt-time">${timeOnly}</div>
           <div class="appt-meta">دكتور: ${docName}</div>
           <div class="appt-meta">مريض: ${patName}</div>
         </div>`;
@@ -76,6 +82,52 @@
     }).join('');
     root.innerHTML = html;
   }
+    function formatDateOnly(dateInput){
+      try{
+        const d = dateInput ? new Date(dateInput) : null;
+        if(!d || Number.isNaN(d.getTime())) return '';
+        return d.toLocaleDateString('ar-EG',{year:'numeric',month:'short',day:'numeric'});
+      }catch(e){ return ''; }
+    }
+
+    function formatTimeOnlyFromIso(dateInput){
+      try{
+        const d = dateInput ? new Date(dateInput) : null;
+        if(!d || Number.isNaN(d.getTime())) return '';
+        return d.toLocaleTimeString('ar-EG',{hour:'2-digit',minute:'2-digit', hour12: true});
+      }catch(e){ return ''; }
+    }
+
+    // Parse common API time formats (e.g. "14:30" or "2:30 PM") and return localized 12-hour string
+    function formatTimeFromApi(timeStr){
+      try{
+        if(!timeStr) return '';
+        const s = String(timeStr).trim();
+        // simple HH:MM (24-hour)
+        const m = s.match(/^(\d{1,2}):(\d{2})$/);
+        if(m){
+          const hh = Number(m[1]); const mm = Number(m[2]);
+          const d = new Date(); d.setHours(hh); d.setMinutes(mm); d.setSeconds(0); d.setMilliseconds(0);
+          return d.toLocaleTimeString('ar-EG',{hour:'2-digit',minute:'2-digit', hour12: true});
+        }
+        // HH:MM AM/PM
+        const m2 = s.match(/^(\d{1,2}):(\d{2})\s*(AM|PM|am|pm)$/);
+        if(m2){
+          let hh = Number(m2[1]); const mm = Number(m2[2]); const ampm = m2[3].toLowerCase();
+          if(ampm === 'pm' && hh < 12) hh += 12;
+          if(ampm === 'am' && hh === 12) hh = 0;
+          const d = new Date(); d.setHours(hh); d.setMinutes(mm); d.setSeconds(0); d.setMilliseconds(0);
+          return d.toLocaleTimeString('ar-EG',{hour:'2-digit',minute:'2-digit', hour12: true});
+        }
+        // try parsing as time-only with Date
+        const tryIso = new Date('1970-01-01T' + s);
+        if(!Number.isNaN(tryIso.getTime())){
+          return tryIso.toLocaleTimeString('ar-EG',{hour:'2-digit',minute:'2-digit', hour12: true});
+        }
+        // otherwise return original string as fallback
+        return s;
+      }catch(e){ return String(timeStr); }
+    }
 
   // bootstrap
   (async function(){

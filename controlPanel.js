@@ -243,4 +243,16 @@
     }catch(err){ root.innerHTML = `<div class="panel"><p>خطأ في الاتصال: ${escapeHtml(err.message)}</p></div>`; }
   });
 
+  // Add event listener for the navbar toggle button
+  (function() {
+    const navToggle = document.querySelector('.nav-toggle');
+    const navList = document.querySelector('.nav-list');
+
+    if (navToggle && navList) {
+      navToggle.addEventListener('click', () => {
+        navList.classList.toggle('active');
+      });
+    }
+  })();
+
 })();
