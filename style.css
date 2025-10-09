@@ -454,3 +454,17 @@ footer {
 .appt-card.scheduled { background: rgba(42,125,225,0.06); border-color: rgba(42,125,225,0.14); }
 .appt-card.completed { background: rgba(52,199,89,0.06); border-color: rgba(52,199,89,0.14); }
 .appt-card.cancelled { background: rgba(255,77,79,0.06); border-color: rgba(255,77,79,0.14); }
+
+/* appointment card hover pop effect (only on hover-capable devices) */
+@media (hover: hover) and (pointer: fine) {
+    .appt-link { display:block; text-decoration:none; }
+    .appt-card {
+        transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
+        will-change: transform, box-shadow;
+    }
+    .appt-card:hover {
+        transform: translateY(-8px) scale(1.01);
+        box-shadow: 0 14px 30px rgba(22,40,80,0.12);
+        border-color: rgba(42,125,225,0.18);
+    }
+}

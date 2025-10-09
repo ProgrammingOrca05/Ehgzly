@@ -137,8 +137,70 @@
     try{
       const res = await tryFetch('/appointment', token);
       if(!res.ok){ if(res.status===401||res.status===403){ showAuthPrompt('رجاء تسجيل الدخول لعرض الحجوزات'); } else { root.innerHTML = `<div class="panel" style="padding:12px;background:#fff;border-radius:8px;border:1px solid #eee">خطأ في جلب المواعيد: ${res.status || ''}</div>`; } return; }
-      renderList(res.data || []);
+      // sort appointments by date (earliest first)
+      const items = Array.isArray(res.data) ? res.data.slice() : (res.data && Array.isArray(res.data.items) ? res.data.items.slice() : []);
+      items.sort((a,b)=>{
+        const da = parseAppointmentDate(a);
+        const db = parseAppointmentDate(b);
+        if(!da && !db) return 0;
+        if(!da) return 1;
+        if(!db) return -1;
+        // descending: newer (larger) dates first
+        return db - da;
+      });
+      renderList(items||[]);
     }catch(err){ root.innerHTML = `<div class="panel" style="padding:12px;background:#fff;border-radius:8px;border:1px solid #eee">خطأ في الاتصال: ${err.message}</div>`; }
   })();
+
+  // parse an appointment's date into a JS Date (robust to strings, objects, nested fields)
+  function parseAppointmentDate(appt){
+    if(!appt) return null;
+    // common fields: appt.date (ISO string), appt.datetime, appt.time combined with appt.date
+    try{
+      // If appt.date is a full ISO or timestamp
+      if(appt.date){ const d = new Date(appt.date); if(!Number.isNaN(d.getTime())) return d; }
+      // try appt.datetime
+      if(appt.datetime){ const d = new Date(appt.datetime); if(!Number.isNaN(d.getTime())) return d; }
+      // sometimes API returns nested object like { date: { year:..., month:..., day:..., time: 'HH:MM' } }
+      if(typeof appt.date === 'object' && appt.date !== null){
+        const obj = appt.date;
+        const year = obj.year || obj.y || obj.Y;
+        const month = obj.month || obj.m;
+        const day = obj.day || obj.d;
+        const time = obj.time || obj.timeOfDay || '';
+        if(year && month && day){
+          const mm = Number(month) - 1; const dd = Number(day);
+          const hhmm = parseTimeToHhMm(time);
+          const d = new Date(year, mm, dd, hhmm.hh, hhmm.mm);
+          if(!Number.isNaN(d.getTime())) return d;
+        }
+      }
+      // fallback: try to parse a combination of date + time fields
+      if(appt.date && appt.time){ const d = new Date(String(appt.date) + ' ' + String(appt.time)); if(!Number.isNaN(d.getTime())) return d; }
+      // last resort: search any string fields for an ISO-like substring
+      for(const k of Object.keys(appt)){
+        const v = appt[k];
+        if(typeof v === 'string' && /\d{4}-\d{2}-\d{2}T\d{2}:\d{2}/.test(v)){
+          const d = new Date(v.match(/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}(:\d{2})?/)[0]); if(!Number.isNaN(d.getTime())) return d;
+        }
+      }
+    }catch(e){}
+    return null;
+  }
+
+  function parseTimeToHhMm(timeStr){
+    let hh = 0, mm = 0;
+    try{
+      if(!timeStr) return {hh:0,mm:0};
+      const s = String(timeStr).trim();
+      const m = s.match(/(\d{1,2}):(\d{2})/);
+      if(m){ hh = Number(m[1])||0; mm = Number(m[2])||0; return {hh,mm}; }
+      const m2 = s.match(/(\d{1,2})\s*(AM|PM|am|pm)/);
+      if(m2){ hh = Number(m2[1])||0; if(/pm/i.test(m2[2]) && hh<12) hh+=12; return {hh,mm}; }
+      const m3 = s.match(/(\d{1,2})/);
+      if(m3) { hh = Number(m3[1])||0; return {hh,mm}; }
+    }catch(e){}
+    return {hh:0,mm:0};
+  }
 
 })();
